@@ -1,0 +1,78 @@
+.abc {
+    padding: 10px;
+    width: 30%;
+    margin-bottom: 10px;
+    text-align: center;
+    margin-left: 35%;
+    margin-top: 2%;
+    animation-name: ani;
+    animation-duration: 3s;
+}
+
+@keyframes ani {
+    from {
+        margin-left: -35%;
+    }
+
+    to {
+        margin-left: 35%;
+    }
+}
+
+.gamebutton {
+    width: 170px;
+    height: 100px;
+    background-color: #000123;
+    border: 2px solid gold;
+    color: white;
+    font-size: 17px;
+    border-radius: 5px;
+}
+
+.gamebutton:hover {
+    color: white;
+    background-color: purple;
+    cursor: pointer;
+}
+
+.inputclass {
+    background-color: orange;
+    padding: 5px;
+    border: 1px solid black;
+    margin-bottom: 3px;
+    width: 80%;
+}
+
+::placeholder {
+    color: white;
+}
+
+/*.animate-charcter */
+.animate-charcter {
+    text-transform: uppercase;
+    background-image: linear-gradient(
+        -225deg,
+        orangered 0%,
+        #ff1d58 29%,
+        #ff1361 67%,
+        #fff800 100%
+    );
+    background-size: auto auto;
+    background-clip: border-box;
+    background-size: 200% auto;
+    color: #fff;
+    background-clip: text;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textclip 2s linear infinite;
+    display: inline-block;
+    font-size: 100px;
+}
+
+@keyframes textclip {
+    to {
+        background-position: 200% center;
+    }
+}
+

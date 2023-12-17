@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>www.game.com</title>
+    <link rel="stylesheet" type="text/css" href="loginstyle.css">
+    <script src="Login.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            background-image: url("Pics/galaxy.jpg");
+            background-size: cover;
+        }
+
+        #logindiv {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            width: 25%;
+            margin: 0 auto;
+            animation-name: show_log_div;
+            animation-duration: 2s;
+            display: none;
+        }
+
+        @keyframes show_log_div {
+            from {
+                margin-top: -20px;
+            }
+
+            to {
+                margin-top: 0;
+            }
+        }
+
+        .buttonclass {
+            background-color: #000123;
+            color: white;
+            width: 100%;
+            padding: 7px;
+            border-radius: 3px;
+            margin-top: 3px;
+            border: none;
+        }
+
+        .buttonclass:hover {
+            background-color: blueviolet;
+            color: white;
+            cursor: pointer;
+        }
+
+        .inputclass {
+            width: 95%;
+            padding: 5px;
+            border: none;
+            margin-top: 3px;
+        }
+
+        #msgid {
+            color: gold;
+            font-size: 17px;
+            font-style: italic;
+        }
+
+        .centered-content {
+            text-align: center;
+            margin: 20px auto 0;
+        }
+
+        .centered-content button {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body onload="login_div_fun()">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h4 class="animate-charcter">Sky High Quiz</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="centered-content">
+        <button class="gamebutton" onclick="show_login_div()">New Player</button>
+        <button class="gamebutton show-rules" onclick="openRules()">Rules</button>
+    </div>
+
+    <marquee direction="right" scrolldelay="70">
+        <pre>
+            <img src="Pics/plane3.png" width="200" height="70">  &nbsp;
+            <img src="Pics/plane3.png" width="100" height="50">
+            <img src="Pics/plane3.png" width="50" height="30">
+        </pre>
+    </marquee>
+
+    <div id="logindiv">
+        <form name="f1">
+            <table align="center" width="100%">
+                <tr>
+                    <td colspan="2" align="center">
+                        <h2><font color="white">Flight Game Login</font></h2>
+                    </td>
+                </tr>
+                <tr>
+                    <th><input type="text" name="username" placeholder="Username" class="inputclass"></th>
+                </tr>
+                <tr>
+                    <th><button type="button" class="buttonclass" onclick="checklogin()">Login</button></th>
+                </tr>
+                <tr>
+                    <th><button type="reset" class="buttonclass">Reset</button></th>
+                </tr>
+                <tr>
+                    <th><span id="msgid">Wrong username</span></th>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>

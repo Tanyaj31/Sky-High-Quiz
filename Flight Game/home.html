@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trivia Game</title>
+    <link rel="stylesheet" type="text/css" href="homestyle.css">
+    <link rel="stylesheet" href="https://brand.workingsolutions.com/components/css/wsol-components.css">
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://brand.workingsolutions.com/components/js/react-embed.js"></script>
+    <script src="map.js" defer></script>
+    <script src="home.js" defer></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        .wrapper {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
+
+        .checkmark {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #fff;
+            stroke-miterlimit: 10;
+            box-shadow: inset 0px 0px 0px #e3081a;
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+
+        .checkmark_circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: #e3081a;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark_check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 30px #be0616;
+            }
+        }
+
+        .mapclass {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="Music/song1.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="topnav">
+        <button class="gamebutton show-menu" onclick="toggleMenu()">
+            <span>Menu</span>
+        </button>
+    </div>
+
+    <div class="data">
+        <div id="playerInfo">
+            <div id="playerName">Player Name</div>
+            <div id="score">Score: 0</div>
+        </div>
+    </div>
+
+    <div id="menuPopup">
+        <button class="gamebutton start" onclick="window.location.reload()">Next</button>
+        <button class="gamebutton pause" onclick="pauseGame()">Pause</button>
+        <button class="gamebutton sound-on-off" onclick="toggleMusic()">Sound On/Off</button>
+        <button class="gamebutton quit" onclick="quit_fun()">Quit Game</button>
+<!--        <button class="gamebutton show-rules" onclick="openRules()">Rules</button>-->
+    </div>
+
+    <div id="questionPopup" class="popup">
+        <div id="questionContent"></div>
+    </div>
+
+    <div id="pausePopup">
+        <div id="pauseContent">
+            <p style="font-size: 36px; font-weight: bold;">Game Paused</p>
+            <button onclick="continueGame()" class="continue-button">Continue</button>
+        </div>
+    </div>
+
+    <div id="js_timer">
+        <div id="timer">
+            03:00
+        </div>
+    </div>
+
+    <div class="wrapper" id="wrongAnswerIcon">
+        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle class="checkmark_circle" cx="26" cy="26" r="25" fill="none" />
+            <path class="checkmark_check" fill="none" d="M14.1 14.1l23.8 23.8 m0,-23.8 l-23.8,23.8" />
+        </svg>
+    </div>
+
+    <div class="container" id="messageBox" style="display: none;">
+        <div class="arrow">
+            <div class="outer"></div>
+            <div class="inner"></div>
+        </div>
+        <div class="message-body">
+            <p><b>Question already answered. Please proceed to the next one!</p>
+        </div>
+    </div>
+
+
+    <div class="mapclass">
+        <div id="map"></div>
+    </div>
+
+    <!-- Alert Div -->
+    <div class="form-alerts toasts" style="display: none;" id="timeAlert">
+    <div role="alert" class="fade form-warning alert alert-primary alert-dismissible show">
+        <button type="button" class="btn-close" aria-label="Close alert" onclick="closeAlert()"></button>
+        <div class="d-flex align-items-center">
+            <img alt="noti-icon" src="https://brand.workingsolutions.com/components/images/ghost.svg" width="28" class="me-4">
+            <p>
+                <b class="d-flex">Hurry up!</b> Only 5 seconds are left. Click on the <b>Next</b> button to go to the next question.
+            </p>
+        </div>
+    </div>
+</div>
+
+    <!-- Warning Message Popup -->
+   <div id="warningMessage" class="warning-popup" style="display: none;">
+    <div class="warning-content">
+        <img src="Pics/game over.png" alt="Game Over" style="width: 300px; height: auto;" />
+
+        <div class="alert fade alert-simple alert-warning alert-dismissible text-left font__family-montserrat font__size-16 font__weight-light brk-library-rendered rendered show" role="alert" data-brk-library="component__alert">
+            <strong class="font__weight-bold">Time's up!</strong> Check your score now.
+        </div>
+        <button class="view-score-button" onclick="viewScore()"><b>View Score</button>
+    </div>
+</div>
+   <!-- Score Popup message box -->
+<div id="scorePopup" class="score-popup" style="display: none;">
+    <div id="scoreMessage" class="score-message"></div>
+    <button id="scorePopupCloseButton" class="close-button" onclick="quit_fun()">Close</button>
+</div>
+
+</body>
+</html>
